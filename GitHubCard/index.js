@@ -1,35 +1,13 @@
-/* Step 1: using axios, send a GET request to the following URL 
-           (replacing the palceholder with your Github name):
-           https://api.github.com/users/<your name>
-*/
 
-/* Step 2: Inspect and study the data coming back, this is YOUR 
-   github info! You will need to understand the structure of this 
-   data in order to use it to build your component function 
-
-   Skip to Step 3.
-*/
-
-/* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
-
-/* Step 5: Now that you have your own card getting added to the DOM, either 
-          follow this link in your browser https://api.github.com/users/<Your github name>/followers 
-          , manually find some other users' github handles, or use the list found 
-          at the bottom of the page. Get at least 5 different Github usernames and add them as
-          Individual strings to the friendsArray below.
-          
-          Using that array, iterate over it, requesting data for each user, creating a new card for each
-          user, and adding that card to the DOM.
-*/
-
-const followersArray = [];
-
-/* Step 3: Create a function that accepts a single object as its only argument,
-          Using DOM methods and properties, create a component that will return the following DOM element:
-
-<div class="card">
+axios
+	.get("https://api.github.com/users/LoralieFlint")
+  .then(resolve =>
+		document.querySelector(".cards").appendChild(cardCreator(resolve.data))
+	)
+  .catch(err => console.log(err)
+  );
+  
+/* <div class="card">
   <img src={image url of user} />
   <div class="card-info">
     <h3 class="name">{users name}</h3>
@@ -42,14 +20,88 @@ const followersArray = [];
     <p>Following: {users following count}</p>
     <p>Bio: {users bio}</p>
   </div>
-</div>
+</div>  */
 
-*/
+/* creating component */
+function cardCreator(data) {
+/* creating element */
+  const div1 = document.createElement("div");
+/* adding classes */
+  div1.classList.add("card");
 
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
-*/
+  const newImage = document.createElement("img");
+  /* getting data from API */
+  newImage.src = data.avatar_url;
+
+  const div2 = document.createElement("div");
+  div2.classList.add("card-info");
+
+  const newHeader = document.createElement("h3");
+  newHeader.classList.add("name");
+  newHeader.textContent = data.name;
+
+  const p1 = document.createElement("p");
+  p1.classList.add("username");
+  p1.textContent = data.login;
+
+  const p2 = document.createElement("p");
+  p2.textContent = `Location: ${data.location}`;
+
+  const p3 = document.createElement("p");
+  p3.textContent = `Profile: `;
+
+  const anch = document.createElement("a");
+  anch.href = data.html_url;
+  anch.textContent = data.html_url;
+
+  const p4 = document.createElement("p");
+  p4.textContent = `Followers: ${data.followers}`;
+
+  const p5 = document.createElement("p");
+  p5.textContent = `Following: ${data.following}`;
+
+  const p6 = document.createElement("p");
+  p6.textContent = `Bio: ${data.bio}`;
+
+
+/* appending components nested in correct place */
+  div1.appendChild(newImage);
+  div1.appendChild(div2);   
+  div2.appendChild(newHeader);
+  div2.appendChild(p1)
+  div2.appendChild(p2)
+  div2.appendChild(p3)
+  p3.appendChild(anch)
+  div2.appendChild(p4)
+  div2.appendChild(p5)
+  div2.appendChild(p6)
+
+/* returning component to the DOM */
+return div1;
+}
+
+/* array of followers */
+const followersArray = [ 
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
+
+/* itterating through the array of followers to make new user cards */
+for (let follows of followersArray) {
+	axios
+		.get(`https://api.github.com/users/${follows}`)
+		.then(res => document.querySelector(".cards").append(cardCreator(res.data)))
+		.catch(err => console.log(err));
+}
+
+
+
+
+
+
+
+
+
